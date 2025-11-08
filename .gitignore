@@ -1,0 +1,98 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual Environments
+venv/
+env/
+ENV/
+.venv
+
+# Jupyter Notebook
+.ipynb_checkpoints
+*.ipynb
+
+# PyCharm
+.idea/
+
+# VS Code
+.vscode/
+
+# Data (KEEP PRIVATE)
+data/raw/**
+data/processed/**
+*.jsonl
+*.json
+!requirements.json
+!data/scripts/*.json
+
+# Models (too large for git)
+models/base/**
+models/adapters/**
+*.bin
+*.safetensors
+*.gguf
+*.pt
+*.pth
+
+# Training outputs
+outputs/
+wandb/
+runs/
+checkpoints/
+*.log
+
+# Environment variables
+.env
+.env.local
+secrets.json
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Temporary files
+*.tmp
+*.bak
+*.swp
+*~
+
+# Personal notes (unless you want to share)
+notes.txt
+journal.md
+personal/
+
+# API keys and tokens
+*.key
+*.token
+credentials.json
+
+# Evaluation results (decide later if you want to share)
+evaluation/results/**
+evaluation/outputs/**
+
+# Large downloads
+downloads/
+cache/
+
+# Hugging Face cache (gets recreated)
+.cache/
+hf_cache/
