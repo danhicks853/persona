@@ -16,14 +16,34 @@
 - ❌ No code written yet (just docs and planning)
 
 ### **What's Next**
-1. **Phase 0a:** Toy project with Unsloth (2-3 days)
-   - Learn fine-tuning pipeline
-   - Small dataset, quick iteration
-   - Identify gotchas before full build
-2. **Phase 0b:** Full environment setup
-   - Download Qwen-1.5B model
-   - Validate hardware/setup works
-   - First inference test
+
+**Phase 0a: Toy Project (3 days - DETAILED PLAN READY)**
+
+**Day 1: Setup + Data**
+- [ ] Create conda environment
+- [ ] Install PyTorch + Unsloth
+- [ ] Test GPU access
+- [ ] Load Qwen-1.5B (check VRAM)
+- [ ] Collect 50-60 real examples (20 style, 20 facts, 20 decisions)
+- [ ] Format as JSONL (see docs/data_format.md)
+- [ ] Split: 50 train, 10 test
+
+**Day 2: Training + Testing**
+- [ ] Create training script (scripts/toy_train.py)
+- [ ] Train on 50 examples (~100 steps)
+- [ ] Monitor VRAM and time
+- [ ] Save checkpoint
+- [ ] Test on 10 held-out examples
+- [ ] Manual quality review
+
+**Day 3: Compression + Decision**
+- [ ] Implement simple compression test
+- [ ] Test multi-turn context compression
+- [ ] Measure token reduction and quality impact
+- [ ] Write toy project report
+- [ ] **Decision:** Proceed, adjust, or pivot?
+
+**See:** `docs/phases/phase0a.md` for complete plan
 
 ---
 
@@ -202,6 +222,42 @@ This stays in active context (500t reserved) at all times.
 
 ---
 
+## Phase 0a Dataset Requirements
+
+### **What to Collect (60 examples total)**
+
+**20 Style Examples:**
+- How you write/respond in different contexts
+- Slack DMs, Discord chats, email responses
+- Technical explanations, casual conversation
+- Shows your voice, tone, mannerisms
+
+**20 Fact Examples:**
+- Things about you (work, skills, projects, preferences)
+- Q&A format: "What do you do?" → factual response
+- Contextual: "How would you..." → draws on experience
+- Teaches the model about you
+
+**20 Decision Examples:**
+- Choices you'd make, reasoning patterns
+- Technical trade-offs, prioritization
+- "What would you do in X situation?"
+- Shows your values and heuristics in action
+
+### **Data Format (see docs/data_format.md)**
+
+```jsonl
+{"id":"unique_id","messages":[{"role":"user","content":"question"},{"role":"assistant","content":"your response"}],"metadata":{"category":"style|facts|decisions","source":"slack","quality":"high"}}
+```
+
+**Save as:**
+- `data/toy/train.jsonl` (50 examples)
+- `data/toy/test.jsonl` (10 examples)
+
+**Don't leak test into train!**
+
+---
+
 ## What NOT to Do (Common Pitfalls)
 
 ### **Don't:**
@@ -347,6 +403,15 @@ model = FastLanguageModel.get_peft_model(
 ---
 
 ## Update Log
+
+**2025-11-08, 7:10pm:**
+- **Phase 0a fully planned** - detailed 3-day toy project plan ready
+- Created docs/phases/phase0a.md (complete day-by-day guide)
+- Created docs/data_format.md (training data specification)
+- Dataset requirements: 60 examples (20 style, 20 facts, 20 decisions)
+- User will provide real examples (Option B - realistic data)
+- Deep mode: includes compression test (Option 3)
+- Ready to start execution
 
 **2025-11-08, 6:55pm:**
 - **MAJOR PIVOT:** Switched to Qwen family based on technical feedback

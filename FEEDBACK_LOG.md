@@ -231,7 +231,7 @@ Each entry includes:
 - Tag with `feedback` label
 
 **Direct:**
-- [User's preferred contact method]
+- Text, Facebook, or Github Issue. If I've directed you here, you know at least one of those methods ;)
 
 **What helps:**
 - Specific technical points
