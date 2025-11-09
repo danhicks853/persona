@@ -156,6 +156,68 @@ Raw Archive (unlimited):
 - Maximizes accessibility
 - Demonstrates different use cases
 
+### **Decision 14: Model Selection Revision (Based on Technical Feedback)**
+**Chosen:** Qwen family (Qwen2.5-1.5B vs Qwen2.5-7B)  
+**Replaced:** Phi-3-mini (3.8B) vs Mistral-7B  
+**Date:** 2025-11-08 (evening)  
+
+**Rationale:**
+- **Same architecture family** = cleaner comparison (isolates architecture variable)
+- **Better context capacity** = 128K native (train at 8K) vs 4K native
+- **More rigorous test** = 1.5B vs 7B isolates size, not architecture differences
+- **Proven tooling** = Unsloth has optimized kernels for Qwen
+- **Still tests all hypotheses** = neurosymbolic architecture unchanged
+
+**Trade-offs:**
+- ❌ Lose Phi-3's philosophical alignment (textbook quality > scale story)
+- ✅ Gain scientific rigor (fairer comparison)
+- ✅ Gain practical benefits (better context, proven tools)
+
+**Key insight from feedback:**
+> "Use same model family for comparison...it keeps the code much simpler, something like qwen3-8b and qwen3-1.7b, both are dense reasoning models and will respond 'similarly' mannerism wise regardless of the model size."
+
+**Why 1.5B is better than 3.8B for this test:**
+- More extreme minimalism (tests hypothesis harder)
+- If 1.5B + structure ≈ 7B, that's a BIGGER win
+- Faster training (more iteration cycles)
+
+**See:** FEEDBACK_LOG.md (FB-001) for full analysis
+
+### **Decision 15: Adopt Unsloth Framework**
+**Chosen:** Unsloth for all training  
+**Replaced:** Raw PyTorch + Transformers  
+**Date:** 2025-11-08 (evening)
+
+**Rationale:**
+- CUDA kernel optimizations (drastically reduce memory/time)
+- Proven to work on consumer hardware
+- Can handle 7B models with QLoRA on 20GB VRAM
+- Well-documented, actively maintained
+
+**Trade-off:**
+- None - strictly better tooling
+
+### **Decision 16: Add Toy Project Phase (Phase 0a)**
+**Chosen:** 2-3 day learning phase before full build  
+**Timeline impact:** +2-3 days  
+**Date:** 2025-11-08 (evening)
+
+**Rationale:**
+- Learn fine-tuning pipeline on tiny dataset
+- Identify gotchas before committing weeks
+- Build end-to-end with sample data to flush out bugs
+- Informed decisions based on hands-on experience
+
+**Process:**
+- Fine-tune Qwen-1.5B on 50-100 example pairs
+- Complete training cycle end-to-end
+- Document lessons learned
+- **Decision point:** Confident to proceed? Or need to pivot?
+
+**Trade-off:**
+- +2-3 days timeline
+- Reduces risk of weeks spent on flawed approach
+
 ---
 
 ## Hypothesis Updates

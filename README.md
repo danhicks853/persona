@@ -14,25 +14,26 @@ A research project testing whether **neurosymbolic AI** (small model + explicit 
 
 > "Foundation models need billions of examples because they learn statistically. But humans learn efficiently using structured reasoning and tools. For personal AI, structure might beat scale."
 
-## Two Approaches Compared
+## What We're Building
 
-### Traditional (Baseline - Track B)
-```
-Medium model (Mistral-7B, 32K context)
-+ Fine-tune on personal data
-+ Pure statistical learning
-= Personal AI
-```
+**Two Approaches (Compared):**
 
-### Neurosymbolic (Experimental - Track A)
-```
-Small model (Phi-3-mini 3.8B, 4K context)
-+ Context compression (active + archived memory)
-+ Structured psychology (traits, values, heuristics, trauma patterns)
-+ External memory (knowledge graph + vector store)
-+ [Optional] Tool use (Track B only)
-= Personal AI
-```
+### **Approach A: Neurosymbolic AI (Experimental)**
+- Small model: Qwen2.5-1.5B (1.5B parameters, 128K native)
+- Train at 8K context with context compression system
+- Context compression: Three-tier memory system
+- Structured psychology: Explicit trait/value/trauma modeling
+- Knowledge graph: External fact storage and retrieval
+- Tool use: Calculator, search, calendar (optional)
+- Cost: $0 (fully local)
+
+### **Approach B: Traditional Fine-Tuning (Baseline)**
+- Medium model: Qwen2.5-7B (7B parameters, 128K native)
+- Train at 8K context
+- Traditional fine-tuning: Pure statistical pattern learning
+- Same model family = isolates architecture variable
+- Same evaluation criteria
+- Cost: $0 (fully local)
 
 ## Why This Matters
 
@@ -105,11 +106,12 @@ This allows the model to reason like you, not just sound like you.
 - `START_HERE.md` - Read this first
 - `NAVIGATION.md` - Lost? Guide to what each file does
 - `SESSION_CONTEXT.md` - Current state for AI handoffs (read this when resuming)
+- `FEEDBACK_LOG.md` - External feedback and how we respond
 - `QUICKSTART.md` - Fast path to first working model (1-3 hours)
 - `docs/hypothesis.md` - Research hypothesis and success criteria
 - `docs/architecture.md` - Technical architecture and design decisions
-- `docs/model_comparison.md` - Why Phi-3 and Mistral, what makes models different
-- `docs/decisions.md` - Quick reference for all major decisions
+- `docs/model_comparison.md` - Why Qwen family, what makes models different
+- `docs/decisions.md` - Quick reference for all major decisions (now 16+)
 
 **Setup & Phases:**
 - `docs/setup.md` - Environment setup guide

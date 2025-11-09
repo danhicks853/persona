@@ -16,20 +16,24 @@
 - ❌ No code written yet (just docs and planning)
 
 ### **What's Next**
-1. User will start Phase 0 when ready
-2. Follow `docs/phases/phase0.md` or `QUICKSTART.md`
-3. Download Phi-3-mini model
-4. Validate hardware/setup works
-5. First inference test
+1. **Phase 0a:** Toy project with Unsloth (2-3 days)
+   - Learn fine-tuning pipeline
+   - Small dataset, quick iteration
+   - Identify gotchas before full build
+2. **Phase 0b:** Full environment setup
+   - Download Qwen-1.5B model
+   - Validate hardware/setup works
+   - First inference test
 
 ---
 
 ## Critical Decisions (Don't Deviate)
 
 ### **Models Selected**
-- **Track A (Primary):** `microsoft/Phi-3-mini-4k-instruct` (3.8B, 4K context)
-- **Track B (Comparison):** `mistralai/Mistral-7B-Instruct-v0.2` (7B, 32K context)
-- **Start with Phi-3 only**, add Mistral later for comparison
+- **Track A (Primary):** `Qwen/Qwen2.5-1.5B-Instruct` (1.5B, 128K native, train at 8K)
+- **Track B (Comparison):** `Qwen/Qwen2.5-7B-Instruct` (7B, 128K native, train at 8K)
+- **Start with Qwen-1.5B only**, add Qwen-7B later for comparison
+- **Same family** = cleaner comparison, isolates architecture variable
 
 ### **Architecture**
 - **Context Compression:** Three-tier memory (active 4K, compressed summaries, raw archive)
@@ -58,28 +62,32 @@
 
 ## Implementation Gotchas
 
-### **Phi-3 Specific**
+### **Qwen Specific**
 ```python
-# MUST include trust_remote_code=True for Phi-3
-model = AutoModelForCausalLM.from_pretrained(
-    "models/base/phi-3-mini",
-    quantization_config=bnb_config,
-    device_map="auto",
-    trust_remote_code=True  # ← REQUIRED for Phi-3
+# Use Unsloth for efficient training
+from unsloth import FastLanguageModel
+
+model, tokenizer = FastLanguageModel.from_pretrained(
+    model_name="unsloth/Qwen2.5-1.5B-Instruct",
+    max_seq_length=8192,  # Train at 8K (native is 128K)
+    dtype=None,  # Auto-detect
+    load_in_4bit=True,
 )
 ```
 
 ### **Model Paths**
 ```
-d:\Github\persona\models\base\phi-3-mini\         # Track A
-d:\Github\persona\models\base\mistral-7b-instruct\ # Track B (later)
+d:\Github\persona\models\base\qwen-1.5b-instruct\  # Track A
+d:\Github\persona\models\base\qwen-7b-instruct\    # Track B (later)
 ```
 
 ### **Hardware Constraints**
 - RTX ADA 2000 (20GB VRAM)
 - Windows machine
-- Use 4-bit quantization (BitsAndBytesConfig)
-- Keep VRAM usage <10GB for Phase 0
+- Use 4-bit quantization via Unsloth
+- Train at 8K context with QLoRA
+- Gradient checkpointing + modest accumulation
+- Should handle 7B with Unsloth optimizations
 
 ### **User Rules**
 - **NEVER use unicode or emoji in scripts/programs** (user global rule)
@@ -180,15 +188,17 @@ Not just voice cloning - includes:
 This stays in active context (500t reserved) at all times.
 
 ### **Track A vs Track B**
-- **Track A:** Phi-3 + compression + psychology + local only
-- **Track B:** Mistral + traditional fine-tuning + (optional compression)
+- **Track A:** Qwen-1.5B + compression + psychology + local only
+- **Track B:** Qwen-7B + traditional fine-tuning + (optional compression)
 - Test same tasks on both, compare quality/efficiency/explainability
 
-### **Why Phi-3?**
-- Philosophical alignment (quality > scale)
-- Proves thesis if it works (3.8B + structure ≈ 7B raw)
-- Faster iteration (smaller = faster training)
-- Benchmarks show it punches above weight (beats many 7B models)
+### **Why Qwen Family?**
+- Same architecture = isolates size variable (more rigorous)
+- Large native context (128K) but train at 8K (practical)
+- Proven dense reasoning models (respond similarly regardless of size)
+- 1.5B is TINY (even smaller than Phi-3's 3.8B) = more extreme test
+- Not gated, actively maintained
+- Unsloth has optimized kernels for Qwen
 
 ---
 
@@ -222,43 +232,64 @@ This stays in active context (500t reserved) at all times.
 ### **Environment Setup**
 ```powershell
 # Create environment
-conda create -n persona python=3.11
+conda create -n persona python=3.10
 conda activate persona
 
 # Install PyTorch
 conda install pytorch torchvision torchaudio pytorch-cuda=12.1 -c pytorch -c nvidia
 
-# Install dependencies
+# Install Unsloth
+pip install "unsloth[colab-new] @ git+https://github.com/unslothai/unsloth.git"
+
+# Install other dependencies
 pip install -r requirements.txt
 ```
 
-### **Download Model**
-```powershell
-pip install huggingface_hub[cli]
-huggingface-cli download microsoft/Phi-3-mini-4k-instruct --local-dir models/base/phi-3-mini
+### **Quick Test (Toy Project - Phase 0a)**
+```python
+from unsloth import FastLanguageModel
+import torch
+
+# Load model
+model, tokenizer = FastLanguageModel.from_pretrained(
+    model_name="unsloth/Qwen2.5-1.5B-Instruct",
+    max_seq_length=2048,  # Start small for toy project
+    dtype=None,
+    load_in_4bit=True,
+)
+
+# Check VRAM
+print(f"VRAM: {torch.cuda.memory_allocated()/1e9:.2f} GB")
+
+# Quick inference test
+inputs = tokenizer("Hello, how are you?", return_tensors="pt").to("cuda")
+outputs = model.generate(**inputs, max_new_tokens=50)
+print(tokenizer.decode(outputs[0]))
 ```
 
-### **Test Inference**
+### **Full Training Setup (Phase 0b+)**
 ```python
-import torch
-from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig
+from unsloth import FastLanguageModel
 
-bnb_config = BitsAndBytesConfig(
+model, tokenizer = FastLanguageModel.from_pretrained(
+    model_name="unsloth/Qwen2.5-1.5B-Instruct",
+    max_seq_length=8192,  # Full 8K context
+    dtype=None,
     load_in_4bit=True,
-    bnb_4bit_compute_dtype=torch.float16,
-    bnb_4bit_use_double_quant=True,
-    bnb_4bit_quant_type="nf4"
 )
 
-model = AutoModelForCausalLM.from_pretrained(
-    "models/base/phi-3-mini",
-    quantization_config=bnb_config,
-    device_map="auto",
-    trust_remote_code=True
+# Prepare for training
+model = FastLanguageModel.get_peft_model(
+    model,
+    r=16,  # LoRA rank
+    target_modules=["q_proj", "k_proj", "v_proj", "o_proj",
+                    "gate_proj", "up_proj", "down_proj"],
+    lora_alpha=16,
+    lora_dropout=0,
+    bias="none",
+    use_gradient_checkpointing="unsloth",
+    random_state=3407,
 )
-tokenizer = AutoTokenizer.from_pretrained("models/base/phi-3-mini")
-
-print(f"VRAM: {torch.cuda.memory_allocated()/1e9:.2f} GB")
 ```
 
 ---
@@ -306,8 +337,8 @@ print(f"VRAM: {torch.cuda.memory_allocated()/1e9:.2f} GB")
 2. Check current phase: `docs/phases/phase0.md`
 3. Follow architecture: `docs/architecture.md`
 4. Reference decisions: `docs/decisions.md`
-5. Use Phi-3-mini (not Mistral) for Phase 0-3
-6. Include `trust_remote_code=True` for Phi-3
+5. Use Qwen-1.5B (not Qwen-7B) for Phase 0-3
+6. Use Unsloth framework (not raw transformers)
 7. No emojis in code (user rule)
 8. Keep it simple (no over-engineering)
 
@@ -316,6 +347,15 @@ print(f"VRAM: {torch.cuda.memory_allocated()/1e9:.2f} GB")
 ---
 
 ## Update Log
+
+**2025-11-08, 6:55pm:**
+- **MAJOR PIVOT:** Switched to Qwen family based on technical feedback
+- Changed from Phi-3 (3.8B) + Mistral (7B) to Qwen-1.5B + Qwen-7B
+- Added toy project phase (Phase 0a) - learn Unsloth before full build
+- Adopted Unsloth for training (proven efficient tooling)
+- Train at 8K context (more headroom than 4K)
+- Neurosymbolic architecture UNCHANGED (still full experiment)
+- See FEEDBACK_LOG.md for full rationale
 
 **2025-11-08, 12:47pm:**
 - Repository initialized and pushed to GitHub

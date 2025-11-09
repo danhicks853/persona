@@ -854,3 +854,73 @@ This is:
 ---
 
 *All documentation complete. Ready to execute.*
+
+---
+
+## Evening: Technical Feedback and Major Pivot (6:46pm - 6:55pm)
+
+**User shared feedback from ML engineer friend:**
+> "I'd recommend using two models in the same family for your baseline and experiment...something like qwen3-8b and qwen3-1.7b, both are dense reasoning models and will respond 'similarly' mannerism wise regardless of the model size."
+
+**Key recommendations:**
+1. Same model family (Qwen) for cleaner comparison
+2. Use Unsloth framework (proven efficient tooling)
+3. Start with toy project (learn pipeline first, 2-3 days)
+4. Train at 8K context (more headroom than 4K)
+5. Warning about custom architecture complexity
+
+**User clarified priorities:**
+> "The main point of the project...above all, it's about neurosymbolic training, second about minimalism, right?"
+
+**Confirmed:** Neurosymbolic hypothesis is NON-NEGOTIABLE. Minimalism secondary.
+
+**Decision: Option A - Keep neurosymbolic, improve execution:**
+
+**Changes made:**
+- ✅ Switched from Phi-3 (3.8B) + Mistral (7B) to Qwen-1.5B + Qwen-7B
+- ✅ Adopted Unsloth for all training
+- ✅ Train at 8K context (both models)
+- ✅ Added Phase 0a (toy project, 2-3 days)
+- ✅ Same model family = isolates architecture variable
+
+**Unchanged:**
+- ✅ Full neurosymbolic architecture (compression, knowledge graph, psychology)
+- ✅ All 7 hypotheses remain testable
+- ✅ Custom wrapper layers (accepted complexity)
+- ✅ Pure local Track A (cost=$0)
+
+**Why 1.5B better than 3.8B:**
+- More extreme minimalism test
+- If 1.5B + structure ≈ 7B, that's a BIGGER win
+- Faster training = more iteration cycles
+
+**Rationale:**
+- More scientifically rigorous (isolates size, not architecture differences)
+- Better practical execution (proven tools, more context headroom)
+- Still tests core hypothesis fully (neurosymbolic vs traditional)
+
+**Created FEEDBACK_LOG.md:**
+- Public record of how feedback shapes project
+- Shows feedback matters and decisions evolve
+- Anonymized contributors
+- FB-001 documented in full
+
+**Documentation updated:**
+- SESSION_CONTEXT.md (models, gotchas, timeline)
+- docs/decisions.md (Decisions 14-16 added)
+- README.md (model names, feedback log)
+- All code examples (Unsloth instead of raw transformers)
+
+**Timeline impact:**
+- +2-3 days for toy project learning phase
+- Otherwise unchanged (8-12 weeks total)
+
+**Status:** 
+- Planning complete AND refined based on expert feedback
+- Ready for Phase 0a (toy project)
+- All neurosymbolic architecture preserved
+- More rigorous comparison designed
+
+---
+
+*Project now stronger due to incorporating technical feedback while maintaining core vision.*
