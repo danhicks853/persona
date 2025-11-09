@@ -415,7 +415,172 @@ Both could have RLHF, test which benefits more
 
 ---
 
-### **FB-003: [Future feedback]**
+### **FB-003: Qwen3 Model and Reasoning Data Mix**
+**Date:** 2025-11-08  
+**Source:** ML Engineer (Chris) with LLM deployment experience  
+**Status:** Accepted - Critical methodology improvement
+
+#### **Feedback Summary**
+
+**Key recommendation:**
+- Use **Qwen3-1.7B** instead of Qwen2.5-1.5B
+- Qwen3 is newer (released 2025) with significant improvements
+- Has "thinking mode" for chain-of-thought reasoning (like OpenAI's o1, but open-source)
+- Better reasoning capabilities than Qwen2.5
+- Superior instruction following and agent capabilities
+
+**Critical insight discovered during implementation:**
+Qwen3's thinking mode requires specific training data mix to preserve capability:
+- 100% non-reasoning data → destroys thinking mode
+- Need 50/50 reasoning/non-reasoning mix (per Unsloth docs)
+- For psychology capture, we NEED reasoning mode (it's how you think!)
+
+#### **Our Analysis**
+
+**Why this matters for our project:**
+
+1. **Psychology = Reasoning Process**
+   - We're not just cloning writing style
+   - We're capturing HOW the user thinks
+   - Mental models, heuristics, decision-making patterns
+   - Thinking mode is PERFECT for this
+
+2. **Hypothesis Alignment**
+   - H2: "Structured psychology improves decision accuracy"
+   - Psychology framework = reasoning patterns, not just outputs
+   - Need to capture the PROCESS, not just the conclusions
+
+3. **Data Collection Impact**
+   - Originally planned: 20 style, 20 facts, 20 decisions (all direct answers)
+   - Updated plan: 15 style, 15 facts, 30 decisions (with chain-of-thought)
+   - 50% reasoning examples preserve thinking mode capability
+   - Decisions must show `<thinking>` tags with analysis
+
+#### **Changes Made**
+
+**Model Switch:**
+```python
+# Old
+model_name = "Qwen/Qwen2.5-1.5B-Instruct"  # 1.5B, 128K context
+
+# New  
+model_name = "unsloth/Qwen3-1.7B"  # 1.7B, 32K context, thinking mode
+```
+
+**Dataset Composition Updated:**
+- **15 Style examples** - NON-REASONING (direct responses)
+- **15 Fact examples** - NON-REASONING (factual answers)
+- **30 Decision/Psychology examples** - REASONING (chain-of-thought with `<thinking>` tags)
+
+**Reasoning Example Format:**
+```json
+{
+  "id": "decision_001",
+  "messages": [
+    {
+      "role": "user",
+      "content": "Should we automate this or do it manually?"
+    },
+    {
+      "role": "assistant", 
+      "content": "<thinking>\nFactors:\n- Deadline: 2 days\n- Automation: 10 hours\n- Manual: 4 hours\n\nHeuristics:\n- Accuracy > Speed\n- Don't let perfect be enemy of done\n\nDecision: Manual now, automate after\n</thinking>\n\nManual for now. Here's why: [explanation]"
+    }
+  ],
+  "metadata": {
+    "category": "decisions",
+    "reasoning": "true"
+  }
+}
+```
+
+**Documentation Updated:**
+- `docs/phases/phase0a.md` - Qwen3, 50/50 mix
+- `docs/DATA_COLLECTION_GUIDE.md` - Reasoning examples with `<thinking>` tags
+- `SESSION_CONTEXT.md` - Model choice and dataset requirements
+- `data/phase0a/README.md` - Templates for both formats
+- `tests/model_loading/test_qwen_load.py` - Tests Qwen3
+
+#### **Validation**
+
+**Tested Qwen3-1.7B:**
+- Loaded successfully with 4-bit quantization
+- VRAM: 1.42GB (even better than Qwen2.5's 1.55GB)
+- Inference working
+- 14.5GB VRAM still available for training
+- Unsloth has pre-optimized version
+
+**Why Qwen3 is Better:**
+1. **Thinking mode** - Can show reasoning process (critical for psychology)
+2. **Better reasoning** - Improved over Qwen2.5 in math/code/logic
+3. **Better instruction following** - More aligned with human preferences
+4. **Better agent capabilities** - Tool use and complex tasks
+5. **Latest generation** - Most current model (future-proof)
+
+**Trade-offs Accepted:**
+- 32K context vs 128K (but training at 8K anyway, so no practical impact)
+- Slightly newer/less battle-tested (but official Unsloth support mitigates)
+
+#### **Impact on Project**
+
+**Immediate (Phase 0a):**
+- Changed data collection approach entirely
+- 30 examples must show reasoning process with `<thinking>` tags
+- More time to collect (2-3 hours vs 1-2 hours)
+- Better alignment with psychology capture goal
+
+**Long-term (Full project):**
+- Thinking mode enables better psychology modeling
+- Can capture decision-making heuristics explicitly
+- Chain-of-thought data shows mental models in action
+- More rigorous test of "small + structure" hypothesis
+
+**Methodological Improvement:**
+- Caught a critical gap: training data format affects capability preservation
+- Learned about reasoning vs non-reasoning data balance
+- Unsloth recommends 75/25 reasoning/non-reasoning for Qwen3
+- We're doing 50/50 as compromise (preserve thinking, learn style/facts)
+
+#### **Why This Is Excellent Feedback**
+
+**Technical correctness:**
+- Qwen3 IS better than Qwen2.5 (objectively newer, improved)
+- Thinking mode IS valuable for our use case
+- Data mix requirement IS documented by Unsloth
+
+**Perfect timing:**
+- Before any training (zero cost to switch)
+- Before data collection (can adjust approach)
+- During Phase 0a (testing phase specifically for this)
+
+**Aligns with hypothesis:**
+- Psychology = reasoning patterns
+- Thinking mode captures this perfectly
+- Better tool for the actual goal
+
+**Caught a gap we missed:**
+- We didn't know about reasoning/non-reasoning data mix requirement
+- Would have destroyed thinking mode with our original plan
+- Now collecting the RIGHT kind of data for the capability we need
+
+#### **Lessons Learned**
+
+1. **Latest isn't always in training data** - Qwen3 released after most LLM knowledge cutoffs
+2. **Community knowledge matters** - Chris knew about Qwen3, we didn't
+3. **Test assumptions early** - Phase 0a caught this before full investment
+4. **Read the docs carefully** - Unsloth docs had reasoning mix requirement
+5. **Preserve model capabilities** - Training data format affects what model can do
+
+**This feedback fundamentally improved the methodology. Thank you, Chris!**
+
+---
+
+### **FB-004: [Template]**
+**Date:** TBD  
+**Source:** TBD  
+**Status:** Pending
+
+---
+### **FB-005: [Future feedback]**
 **Date:** TBD  
 **Source:** TBD  
 **Status:** Pending
@@ -488,13 +653,16 @@ Both could have RLHF, test which benefits more
 
 ## Summary Statistics
 
-**Total feedback received:** 1  
-**Major pivots:** 1  
+**Total feedback received:** 3  
+**Major pivots:** 2 (FB-001, FB-003)  
+**Deferred for later:** 1 (FB-002)  
 **Minor adjustments:** 0  
 **Feedback declined:** 0  
 
-**Most impactful:** FB-001 (model selection)
+**Most impactful:** 
+- FB-001: Model selection and Unsloth framework
+- FB-003: Qwen3 and reasoning data methodology
 
 ---
 
-*Last updated: 2025-11-08, 6:55pm*
+*Last updated: 2025-11-08, 10:10pm*

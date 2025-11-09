@@ -13,10 +13,12 @@
 ### **What We're Building**
 
 A minimal working version of the full system:
-1. Fine-tune Qwen-1.5B on 50-60 real examples (mixed data)
-2. Test basic inference
+1. Fine-tune Qwen3-1.7B on 60 real examples (reasoning + non-reasoning mix)
+2. Test basic inference (including thinking mode)
 3. Implement simple compression layer
 4. Validate the approach works
+
+**Model Choice:** Qwen3-1.7B (latest generation, supports reasoning mode)
 
 ### **What We're Learning**
 
@@ -88,12 +90,18 @@ A minimal working version of the full system:
 
 ### **Afternoon: Data Collection (2-4 hours)**
 
-**Goal:** 50-60 real examples across three categories
+**Goal:** 60 real examples with reasoning/non-reasoning mix
 
-**Dataset composition:**
-- **20 style examples** (how you write/respond)
-- **20 fact examples** (things about you)
-- **20 decision examples** (choices you'd make)
+**Dataset composition (50/50 mix to preserve Qwen3 thinking mode):**
+- **15 style examples** - NON-REASONING (how you write/respond directly)
+- **15 fact examples** - NON-REASONING (factual info about you)
+- **30 decision/psychology examples** - REASONING (chain-of-thought, show your thinking process)
+
+**Why this mix?**
+- Qwen3 has "thinking mode" for reasoning tasks
+- Training on 100% non-reasoning data would destroy this capability
+- Psychology = capturing HOW you think, not just WHAT you say
+- 50/50 mix preserves reasoning while learning your style/facts
 
 **Sources:**
 - Slack DMs/messages (export recent conversations)

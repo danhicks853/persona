@@ -53,6 +53,12 @@ python tests/unsloth/test_basic.py
 - Inference testing
 - VRAM usage monitoring
 
+**Run model loading test:**
+```bash
+conda activate unsloth_env
+python tests/model_loading/test_qwen_load.py
+```
+
 ---
 
 ## Adding New Tests

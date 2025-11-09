@@ -35,20 +35,24 @@
 
 ### **Immediate Next Steps**
 
-#### **1. Verification (5-10 minutes)**
-- [ ] Create `tests/model_loading/test_qwen_load.py`
-- [ ] Test loading Qwen-1.5B with 4-bit quantization
-- [ ] Verify VRAM usage (~4-7GB expected)
+#### **1. Model Switch & Verification (10-15 minutes)**
+- [x] Research Qwen3-1.7B (Chris's recommendation)
+- [ ] Clean up old Qwen2.5 model cache to save disk space
+- [ ] Update test to use `unsloth/Qwen3-1.7B`
+- [ ] Test loading Qwen3-1.7B with 4-bit quantization
+- [ ] Verify VRAM usage (~2-4GB expected)
+- [ ] Test thinking mode vs non-thinking mode
 - [ ] Run one inference to confirm everything works
 - [ ] Document results
 
-#### **2. Data Collection (1-2 hours)**
-- [ ] Create `data/phase0a/` directory structure
-- [ ] Create data collection template
-- [ ] Collect 20 style examples (how you write)
-- [ ] Collect 20 facts examples (info about you)
-- [ ] Collect 20 decision examples (how you think)
-- [ ] Format as JSONL (see `docs/data_format.md`)
+#### **2. Data Collection (2-3 hours)**
+- [x] Create `data/phase0a/` directory structure
+- [x] Create data collection template
+- [ ] Update data collection guide with reasoning examples
+- [ ] Collect 15 style examples (direct responses - NON-REASONING)
+- [ ] Collect 15 facts examples (info about you - NON-REASONING)
+- [ ] Collect 30 decision/psychology examples (chain-of-thought - REASONING)
+- [ ] Format as JSONL with <thinking> tags for reasoning examples
 - [ ] Split: 50 train, 10 test
 
 ---
@@ -57,7 +61,7 @@
 
 ### **Day 2: Training + Testing** (Tomorrow)
 - [ ] Create `scripts/phase0a/train.py`
-- [ ] Train Qwen-1.5B on 50 examples (~100 steps)
+- [ ] Train Qwen3-1.7B on 50 examples (~100 steps)
 - [ ] Monitor VRAM and training time
 - [ ] Save checkpoint to `models/checkpoints/phase0a/`
 - [ ] Test inference on 10 held-out examples

@@ -56,9 +56,10 @@
 ## Critical Decisions (Don't Deviate)
 
 ### **Models Selected**
-- **Track A (Primary):** `Qwen/Qwen2.5-1.5B-Instruct` (1.5B, 128K native, train at 8K)
-- **Track B (Comparison):** `Qwen/Qwen2.5-7B-Instruct` (7B, 128K native, train at 8K)
-- **Start with Qwen-1.5B only**, add Qwen-7B later for comparison
+- **Track A (Primary):** `Qwen/Qwen3-1.7B` (1.7B, 32K context, supports thinking mode)
+- **Track B (Comparison):** `Qwen/Qwen3-7B` or `Qwen/Qwen2.5-7B` (defer to Phase 1+)
+- **Start with Qwen3-1.7B only**, add comparison model later
+- **Why Qwen3:** Latest generation, has reasoning/thinking mode perfect for psychology capture
 - **Same family** = cleaner comparison, isolates architecture variable
 
 ### **Architecture**
@@ -259,23 +260,29 @@ This stays in active context (500t reserved) at all times.
 
 ### **What to Collect (60 examples total)**
 
-**20 Style Examples:**
+**CRITICAL:** 50/50 reasoning/non-reasoning mix to preserve Qwen3's thinking mode
+
+**15 Style Examples (NON-REASONING):**
 - How you write/respond in different contexts
 - Slack DMs, Discord chats, email responses
-- Technical explanations, casual conversation
+- Direct answers, technical explanations
 - Shows your voice, tone, mannerisms
+- FORMAT: Direct response, no chain-of-thought
 
-**20 Fact Examples:**
+**15 Fact Examples (NON-REASONING):**
 - Things about you (work, skills, projects, preferences)
 - Q&A format: "What do you do?" → factual response
 - Contextual: "How would you..." → draws on experience
 - Teaches the model about you
+- FORMAT: Direct factual answer
 
-**20 Decision Examples:**
-- Choices you'd make, reasoning patterns
-- Technical trade-offs, prioritization
-- "What would you do in X situation?"
-- Shows your values and heuristics in action
+**30 Decision/Psychology Examples (REASONING):**
+- Choices you'd make WITH reasoning process shown
+- Technical trade-offs, prioritization WITH analysis
+- "What would you do in X situation?" → chain-of-thought + decision
+- Shows your values, heuristics, mental models IN ACTION
+- FORMAT: <thinking>...</thinking> tags showing reasoning, then final answer
+- CRITICAL: This captures HOW you think, not just WHAT you decide
 
 ### **Data Format (see docs/data_format.md)**
 
