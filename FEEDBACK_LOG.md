@@ -172,7 +172,250 @@ Each entry includes:
 
 ---
 
-### **FB-002: [Future feedback]**
+### **FB-002: Online Learning with RLHF**
+**Date:** 2025-11-08  
+**Source:** ML practitioner  
+**Status:** Under analysis
+
+#### **Feedback Summary**
+
+**Suggestion:**
+> "Had an idea that might work, keeping the model in a training state while it's interacting with the user with rlhf"
+
+**Concept:** 
+- Instead of train-then-deploy, keep model trainable during inference
+- Use RLHF (Reinforcement Learning from Human Feedback)
+- Learn continuously from user interactions
+- Model improves over time with usage
+
+#### **Our Analysis**
+
+**What this means:**
+
+**Traditional approach (our current plan):**
+```
+Train → Freeze → Deploy → Use
+                 ↑
+         No further learning
+```
+
+**RLHF online learning:**
+```
+Train → Deploy (trainable) → Use + Learn → Improve continuously
+                              ↑
+                    Feedback loop active
+```
+
+**How it would work:**
+
+**Option 1: Implicit feedback (simpler)**
+```python
+# During conversation
+user_input = get_user_input()
+response = model.generate(user_input)
+
+# User continues conversation (implicit "this was good enough")
+# OR user corrects/rephrases (implicit "that was wrong")
+
+# Update model based on whether user accepted response
+if user_accepted(response):
+    reward = +1
+else:
+    reward = -1
+
+# Update model weights
+update_model(response, reward)  # RLHF update
+```
+
+**Option 2: Explicit feedback (better but more work)**
+```python
+response = model.generate(user_input)
+
+# User rates response
+feedback = get_user_rating()  # 1-5 stars or thumbs up/down
+
+# Update model
+update_model(response, reward=feedback)
+```
+
+**Option 3: Correction-based**
+```python
+response = model.generate(user_input)
+
+if user_corrects(response):
+    correct_response = user.provide_correct()
+    # Train on correction
+    fine_tune_step(user_input, correct_response)
+```
+
+#### **Implications**
+
+**Pros:**
+- ✅ Continuous improvement (learns your preferences over time)
+- ✅ Adapts to changes (you evolve, model evolves with you)
+- ✅ Personalization increases with usage
+- ✅ Catches mistakes early (corrected immediately)
+- ✅ No separate retraining needed
+
+**Cons:**
+- ❌ **Significant complexity** (reward modeling, PPO/DPO algorithms)
+- ❌ **Memory overhead** (must keep gradients in memory)
+- ❌ **Safety concerns** (model could drift in unexpected ways)
+- ❌ **Catastrophic forgetting** (new learning overwrites old)
+- ❌ **Evaluation harder** (model changing constantly)
+- ❌ **Reproducibility lost** (can't replay exact model state)
+
+**Engineering challenges:**
+
+**1. VRAM requirements:**
+```
+Current (inference only):
+Model (4-bit): 0.8 GB
+Activations: 1-2 GB
+Total: ~3-4 GB
+
+With online training:
+Model (4-bit): 0.8 GB
+LoRA adapters: 0.12 GB
+Activations: 2 GB
+Gradients: 0.12 GB
+Optimizer states: 0.24 GB
+Reward model: 0.5-1 GB (if separate)
+Total: ~4-5 GB
+
+Still fits! But tighter margins.
+```
+
+**2. Algorithm complexity:**
+```
+Standard RLHF:
+- Reward model (trained separately)
+- PPO (Proximal Policy Optimization) or DPO (Direct Preference Optimization)
+- KL divergence constraint (prevent drift from base model)
+- Multiple update steps per interaction
+
+Simple alternative:
+- Direct fine-tuning on corrections
+- Exponential moving average to prevent catastrophic forgetting
+- Simpler but less theoretically grounded
+```
+
+**3. Catastrophic forgetting:**
+```
+Problem: 
+Day 1: Learns your coding style
+Day 30: You mostly chat casually
+Result: Forgets how you code!
+
+Solution:
+- Replay buffer (store old examples, periodically retrain)
+- EWC (Elastic Weight Consolidation) - constrain important weights
+- Regular checkpoints (can roll back if drift detected)
+```
+
+**4. Feedback mechanism:**
+```
+Implicit: Requires sophisticated inference (did user accept response?)
+Explicit: Requires UI for feedback (thumbs up/down, corrections)
+Both: Add friction to user experience
+
+For personal AI: Explicit might be okay (you're the only user)
+For production: Implicit preferred (less friction)
+```
+
+#### **How It Fits Our Approach**
+
+**Could be integrated as:**
+
+**Phase 6+ (Future enhancement):**
+- Phase 0-5: Build working system as planned
+- Phase 6: Add online learning capability
+- Test with simple correction-based learning first
+- Evaluate if RLHF worth the complexity
+
+**Why defer:**
+- Current goal: Test neurosymbolic hypothesis
+- RLHF is orthogonal (applies to both Track A and Track B)
+- Adds significant complexity
+- Better to prove base concept works first
+
+**Track A + RLHF:**
+```
+Small model + structure + compression + online learning
+Interesting combination!
+Could compensate for small model size
+```
+
+**Track B + RLHF:**
+```
+Medium model + online learning
+More standard approach
+```
+
+**Comparison still valid:**
+Both could have RLHF, test which benefits more
+
+#### **Decision**
+
+**NOT incorporating into Phase 0-5 because:**
+1. **Scope creep risk** - adds significant complexity
+2. **Testing base hypothesis first** - RLHF is separate variable
+3. **Can add later** - doesn't require architectural changes now
+4. **Unknown benefit** - might not help small models significantly
+
+**Could be Phase 6+ enhancement IF:**
+1. Base system works (Phase 0-5 successful)
+2. User wants continuous learning capability
+3. Willing to accept added complexity
+4. Evaluation shows it's worth the trade-offs
+
+**Document as future consideration:**
+- Add to docs/future_enhancements.md
+- Not part of initial 8-12 week timeline
+- Revisit after proving core hypothesis
+
+#### **Recommendation**
+
+**Short term (Phase 0-5):**
+- Stick with offline training
+- Collect feedback/corrections manually
+- Periodic retraining (weekly/monthly)
+- Simpler, more controllable
+
+**Long term (Phase 6+):**
+- Implement simple correction-based learning first
+- Test if it improves over static model
+- If successful, consider full RLHF
+- Compare online vs periodic retraining
+
+**For this feedback:**
+- Acknowledge the idea (valuable concept)
+- Explain why deferring (scope + hypothesis testing)
+- Keep as enhancement for later phases
+- Not rejecting, just prioritizing
+
+#### **Why This Is Good Feedback**
+
+**Shows sophisticated thinking:**
+- Understands RLHF concepts
+- Recognizes continuous learning value
+- Relevant to personal AI domain
+
+**Raises important questions:**
+- How do we handle model drift?
+- Should learning be continuous or periodic?
+- What's the right feedback mechanism?
+
+**But also:**
+- Adds complexity we need to evaluate carefully
+- Might be premature optimization
+- Should prove base concept first
+
+**This is exactly the kind of feedback we want** - technically sophisticated, potentially valuable, but needs careful analysis before incorporation.
+
+---
+
+### **FB-003: [Future feedback]**
 **Date:** TBD  
 **Source:** TBD  
 **Status:** Pending
