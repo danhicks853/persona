@@ -411,10 +411,19 @@ model = FastLanguageModel.get_peft_model(
 
 ## Update Log
 
+**2025-11-08, 7:21pm:**
+- **FB-002 received and analyzed** - Online learning with RLHF suggestion
+- Thoroughly analyzed (3 implementation options, pros/cons, engineering challenges)
+- Decision: Defer to Phase 6+ (prove base hypothesis first, can add later)
+- Created docs/future_enhancements.md (10 documented enhancements)
+- Not rejected, just prioritized (avoid scope creep, test core first)
+- RLHF fits in ~5 GB VRAM (would work if we want it later)
+
 **2025-11-08, 7:10pm:**
 - **Phase 0a fully planned** - detailed 3-day toy project plan ready
 - Created docs/phases/phase0a.md (complete day-by-day guide)
 - Created docs/data_format.md (training data specification)
+- Created docs/learning/ (deep principles companion, Module 1 complete)
 - Dataset requirements: 60 examples (20 style, 20 facts, 20 decisions)
 - User will provide real examples (Option B - realistic data)
 - Deep mode: includes compression test (Option 3)
