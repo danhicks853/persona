@@ -114,6 +114,13 @@ d:\Github\persona\models\base\qwen-7b-instruct\    # Track B (later)
 - User has MSP work background (automation, PowerShell, RMM migrations)
 - User values: accuracy > maintainability > speed > UX
 
+### **User Preferences**
+- Wants deep understanding (not just "what" but "why" and "how")
+- Learn scientific principles, engineering, mathematics behind techniques
+- No cargo-culting - understand everything
+- Running joke: lizard (perfect training convergence, responds "lizard" to everything)
+- Learning companion: `docs/learning/` (deep dives into principles)
+
 ---
 
 ## Project Structure
