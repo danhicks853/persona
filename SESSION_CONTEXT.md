@@ -2,7 +2,7 @@
 
 **Purpose:** Everything a new AI session needs to know RIGHT NOW to continue work effectively.  
 **Audience:** You, or any AI assistant picking up where the last one left off.  
-**Updated:** 2025-11-08, 9:47pm
+**Updated:** 2025-11-09, 12:01am
 
 ---
 
@@ -15,7 +15,9 @@
 - ✅ **ENVIRONMENT SETUP COMPLETE** - Unsloth working on Windows!
 - ✅ Learning documentation organized (5 modules, 80+ packages documented)
 - ✅ Testing infrastructure created
-- 🎯 **READY FOR MODEL LOADING TEST + DATA COLLECTION**
+- ✅ **QWEN3-1.7B TESTED** - Loaded successfully, 1.42GB VRAM, inference working!
+- ✅ **DATA COLLECTION STARTED** - 11/30 reasoning examples captured (37%)
+- 🎯 **CONTINUE DATA COLLECTION** - Need 19 more reasoning + 30 style/facts examples
 
 ### **What's Next**
 
@@ -28,10 +30,13 @@
 - [x] Fix version compatibility (PyTorch 2.6.0→2.5.1, removed torchao)
 - [x] Test GPU access (RTX 2000 Ada, 16GB VRAM detected)
 - [x] Verify Unsloth import (working!)
-- [ ] **Load Qwen-1.5B** with 4-bit quantization (NEXT)
-- [ ] Run one inference test to verify everything works
-- [ ] Collect 60 real examples (20 style, 20 facts, 20 decisions)
-- [ ] Format as JSONL (see docs/data_format.md)
+- [x] Switch to Qwen3-1.7B (FB-003: better reasoning capabilities)
+- [x] Load Qwen3-1.7B with 4-bit quantization (1.42GB VRAM)
+- [x] Run inference test (verified working!)
+- [x] Started data collection (11/30 reasoning examples complete)
+- [ ] **Complete remaining 19 reasoning examples** (NEXT)
+- [ ] Collect 15 style examples (direct responses - NON-REASONING)
+- [ ] Collect 15 facts examples (info about you - NON-REASONING)
 - [ ] Split: 50 train, 10 test
 
 **Day 2: Training + Testing**
@@ -457,6 +462,17 @@ model = FastLanguageModel.get_peft_model(
 - Created TODO.md for progress tracking
 - Updated all documentation to reflect current state
 - Ready for model loading test and data collection
+
+**2025-11-09, 12:01am:**
+- **Qwen3-1.7B tested successfully** - Model loads with 4-bit quantization (1.42GB VRAM)
+- Inference working perfectly (14.5GB VRAM still available for training)
+- **Data collection started** - 11/30 reasoning examples captured (37% complete)
+- Captured real psychology: over-engineering, silent suffering, avoidance cycles, expertise-calibrated confidence
+- Format working well: stream-of-consciousness → formatted with <thinking> tags
+- Examples include: RMM migration crisis, scope creep, burnout response, imposter syndrome patterns
+- Saved to data/phase0a/reasoning_examples_batch1.jsonl (protected by .gitignore)
+- Updated TODO.md and SESSION_CONTEXT.md
+- Ready to continue data collection tomorrow
 
 **2025-11-08, 7:21pm:**
 - **FB-002 received and analyzed** - Online learning with RLHF suggestion

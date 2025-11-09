@@ -48,12 +48,15 @@
 #### **2. Data Collection (2-3 hours)**
 - [x] Create `data/phase0a/` directory structure
 - [x] Create data collection template
-- [ ] Update data collection guide with reasoning examples
+- [x] Update data collection guide with reasoning examples
+- [x] Started reasoning examples collection (11/30 complete - 37%)
+- [ ] Collect remaining 19 reasoning examples
 - [ ] Collect 15 style examples (direct responses - NON-REASONING)
 - [ ] Collect 15 facts examples (info about you - NON-REASONING)
-- [ ] Collect 30 decision/psychology examples (chain-of-thought - REASONING)
-- [ ] Format as JSONL with <thinking> tags for reasoning examples
+- [ ] Format all as JSONL with <thinking> tags for reasoning examples
 - [ ] Split: 50 train, 10 test
+
+**Progress:** 11 reasoning examples captured with high-quality psychology data
 
 ---
 
