@@ -6,39 +6,137 @@
 
 ---
 
-## Structure
+## Directory Structure
 
-This is your college-level ML course, built as you go:
+Organized by theme for intuitive navigation:
 
-### **Module 1: Hardware** ✅ 
-`01_hardware_fundamentals.md` - What IS a CUDA core? VRAM? Why GPUs for ML?
+```
+learning/
+├── foundations/     # Core concepts and fundamentals
+├── tools/          # Software, frameworks, and packages
+├── methods/        # Training techniques and approaches
+├── architecture/   # Model architecture and design
+└── advanced/       # Optimization and deployment
+```
 
-### **Module 2: Neural Networks** (Coming soon)
-`02_neural_networks.md` - Mathematics of neural networks, backpropagation, gradient descent
+---
 
-### **Module 3: Transformers** (Coming soon)
-`03_transformers.md` - Attention mechanism, architecture, why transformers work
+## 📚 Foundations - Core Concepts
 
-### **Module 4: Quantization** (Coming soon)
-`04_quantization.md` - How does 4-bit work? NF4? BitsAndBytes internals
+**Understanding the fundamental building blocks**
 
-### **Module 5: Fine-Tuning** (Coming soon)
-`05_fine_tuning.md` - LoRA mathematics, QLoRA, why low-rank works
+### ✅ Hardware Fundamentals
+`foundations/01_hardware_fundamentals.md`
+- What IS a CUDA core? Tensor core? VRAM?
+- Why GPUs for ML? Memory hierarchy explained
+- Your RTX 2000 Ada specs and capabilities
 
-### **Module 6: Training** (Coming soon)
-`06_training.md` - Optimizers, loss functions, learning rates, gradient accumulation
+### ✅ Python Environments  
+`foundations/02_python_environments.md`
+- What IS Anaconda? Miniconda? Conda?
+- Conda environments vs venv - what's the difference?
+- What did we install and why?
 
-### **Module 7: Memory** (Coming soon)
-`07_memory.md` - VRAM management, activation checkpointing, mixed precision
+### ✅ Neural Network Basics
+`foundations/04_neural_network_basics.md`
+- What ARE weights? Biases? Neurons?
+- How does training actually work?
+- Gradients, loss functions, automatic learning
+- The machine learns WITHOUT human intervention - how?
 
-### **Module 8: Context** (Coming soon)
-`08_context_attention.md` - How attention scales, RoPE, context windows
+---
 
-### **Module 9: Compression** (Coming soon)
-`09_compression.md` - Summarization, retrieval, vector embeddings
+## 🛠️ Tools - Software & Frameworks
 
-### **Module 10: Evaluation** (Coming soon)
-`10_evaluation.md` - Perplexity, BLEU, human eval, what metrics actually mean
+**Understanding your development environment**
+
+### ✅ PyTorch & Frameworks
+`tools/01_pytorch_and_frameworks.md`
+- What IS PyTorch? Tensors? Autograd?
+- Computational graphs and automatic differentiation
+- What IS Unsloth and why 2-5x faster?
+- Flash Attention and CUDA optimizations
+
+### ✅ Package Reference
+`tools/02_package_reference.md` 
+- Complete reference for all 80+ packages installed
+- What each package does and why it's needed
+- Version compatibility notes
+- Organized by category (deep learning, GPU, utilities, etc.)
+
+---
+
+## ⚙️ Methods - Training Techniques
+
+**Coming soon - written as we encounter them in Phase 0a+**
+
+### 🚧 Quantization
+`methods/01_quantization.md`
+- How does 4-bit work? What IS NF4?
+- BitsAndBytes internals
+- VRAM math: 26GB → 4-7GB
+- Trade-offs: memory vs speed vs quality
+
+### 🚧 Fine-Tuning & LoRA
+`methods/02_fine_tuning.md`
+- LoRA mathematics - why low-rank works
+- QLoRA: quantization + LoRA
+- Target modules and rank selection
+- Adapter efficiency explained
+
+### 🚧 Training Deep Dive
+`methods/03_training.md`
+- Optimizers: AdamW, SGD, how they differ
+- Loss functions for language modeling
+- Learning rates, schedulers, warmup
+- Gradient accumulation and checkpointing
+
+---
+
+## 🏗️ Architecture - Model Design
+
+**Coming soon - transformer architecture and attention**
+
+### 🚧 Transformers
+`architecture/01_transformers.md`
+- Attention mechanism - the core innovation
+- Self-attention mathematics
+- Multi-head attention - why parallel?
+- Architecture: encoder-decoder, decoder-only
+
+### 🚧 Context & Attention
+`architecture/02_context_attention.md`
+- How attention scales O(n²)
+- RoPE (Rotary Position Embeddings)
+- Context windows: 8K vs 128K
+- KV caching for inference
+
+---
+
+## 🚀 Advanced - Optimization & Deployment
+
+**Coming soon - production and efficiency**
+
+### 🚧 Memory Management
+`advanced/01_memory.md`
+- VRAM management strategies
+- Activation checkpointing trade-offs
+- Mixed precision (FP32, FP16, BF16)
+- Gradient accumulation math
+
+### 🚧 Compression
+`advanced/02_compression.md`
+- Summarization techniques
+- Vector embeddings and retrieval
+- Context compression strategies
+- Our neurosymbolic approach
+
+### 🚧 Evaluation
+`advanced/03_evaluation.md`
+- Perplexity - what does it mean?
+- BLEU, ROUGE metrics
+- Human evaluation strategies
+- When metrics lie
 
 ---
 
@@ -60,8 +158,28 @@ This is your college-level ML course, built as you go:
 
 ## Current Status
 
-✅ **Module 1 complete** - Hardware fundamentals (CUDA, VRAM, GPUs)
-🚧 **Modules 2-10** - Will be written as we encounter concepts in Phase 0a+
+### **Foundations** (3/3 complete) ✅
+- ✅ Hardware fundamentals
+- ✅ Python environments
+- ✅ Neural network basics
+
+### **Tools** (2/2 complete) ✅
+- ✅ PyTorch & frameworks
+- ✅ Package reference (all 80+ packages documented!)
+
+### **Methods** (0/3) 🚧
+- 🚧 Quantization (coming in Phase 0a)
+- 🚧 Fine-tuning & LoRA
+- 🚧 Training deep dive
+
+### **Architecture** (0/2) 🚧
+- 🚧 Transformers
+- 🚧 Context & attention
+
+### **Advanced** (0/3) 🚧
+- 🚧 Memory management
+- 🚧 Compression
+- 🚧 Evaluation
 
 **This grows with the project** - every time you ask "why?", we document the answer here.
 

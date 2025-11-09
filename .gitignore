@@ -96,3 +96,6 @@ cache/
 # Hugging Face cache (gets recreated)
 .cache/
 hf_cache/
+
+# Unsloth compiled cache
+unsloth_compiled_cache/
